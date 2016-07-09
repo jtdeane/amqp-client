@@ -49,7 +49,7 @@ public class AmqpDeclarationsConfiguration {
     @Bean
     public RabbitAdmin admin(ConnectionFactory connectionFactory) {
     	
-    	logger.info("Kicking off declarations");
+    	logger.info("Kicking off Declarations");
     	
     	RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
     	
