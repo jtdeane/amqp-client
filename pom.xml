@@ -10,7 +10,7 @@
     </parent>
 
     <!-- =========================Project Details=========================== -->
-    <description>Magic Order RESTful Web Service</description>   
+    <description>AMQP Client - Test Harness</description>   
     <groupId>ws.cogito.magic</groupId>
     <artifactId>amqp-client</artifactId>
     <version>1.0.0</version>

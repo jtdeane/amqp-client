@@ -6,23 +6,12 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix="amqp")
 public final class AmqpClientProperties {
-	
-	//cloud 
-	private String serviceInstance;
-	
-	public String getServiceInstance() {
-		return serviceInstance;
-	}
-
-	public void setServiceInstance(String serviceInstance) {
-		this.serviceInstance = serviceInstance;
-	}
 
 	//connections
-	private String host = "localhost";
-	private String vHost = "/";
-	private String userName = "guest";
-	private String userPassword = "guest";
+	private String host;
+	private String vHost;
+	private String userName;
+	private String userPassword;
 	
 	//exchanges
 	private String directExchange;	
