@@ -28,7 +28,6 @@ Send message:
     curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1125, "customer":"Houdini", "item":"Card Deck", "amount":6}' http://localhost:9999/amqp/direct/routingkey
 
 
-
 Publish Message:
 
     curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":7826, "magician":"Teller", "location":"Las Vegas", "Date":"2016-12-25T20:00:000Z"}' http://localhost:9999/amqp/topic/routingkey
