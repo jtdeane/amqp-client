@@ -36,13 +36,11 @@ public class AmqpController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AmqpController.class);
 	
-	@RequestMapping(value = "direct/{routingKey}", method=RequestMethod.POST)
+	@RequestMapping(value = "/{exchange}/{routingKey}", method=RequestMethod.POST)
 	public void sendMessage (@RequestBody String payload, @PathVariable String routingKey,
-			HttpServletResponse response) throws Exception { 
+			@PathVariable String exchange, HttpServletResponse response) throws Exception { 
 		
 		logger.info("Processing Message...");
-		
-		routingKey = routingKey.replace("_", ".");
 		
 		Message message = MessageBuilder.withBody(payload.getBytes())
 				.setContentType(MessageProperties.CONTENT_TYPE_JSON)
@@ -50,32 +48,10 @@ public class AmqpController {
 				.setHeader(TRACKING_ID, response.getHeader(TRACKING_ID))
 				.build();
 		
-		rabbitTemplate.send(properties.getDirectExchange(), routingKey, message);
+		rabbitTemplate.send(exchange, routingKey, message);
 		
-		logger.info("Sent message to Exchange " + properties.getDirectExchange() 
+		logger.info("Sent message to Exchange " + exchange
 			+ " with Routing Key: " + routingKey);
-		
-		response.setStatus(HttpStatus.ACCEPTED.value());
-	}
-	
-	@RequestMapping(value = "topic/{routingKey}", method=RequestMethod.POST)
-	public void publishMessage (@RequestBody String payload, @PathVariable String routingKey,
-			HttpServletResponse response) throws Exception {
-		
-		logger.info("Processing Message...");
-		
-		routingKey = routingKey.replace("_", ".");
-		
-		Message message = MessageBuilder.withBody(payload.getBytes())
-				.setContentType(MessageProperties.CONTENT_TYPE_JSON)
-				.setContentEncoding(StandardCharsets.UTF_8.name())
-				.setHeader(TRACKING_ID, response.getHeader(TRACKING_ID))
-				.build();
-		
-		rabbitTemplate.send(properties.getTopicExchange(), routingKey, message);
-		
-		logger.info("Published message to Exchange " + properties.getTopicExchange() 
-			+ " with Routing Key: " + routingKey);	
 		
 		response.setStatus(HttpStatus.ACCEPTED.value());
 	}

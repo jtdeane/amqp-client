@@ -3,6 +3,7 @@ package ws.cogito.magic.utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import ws.cogito.magic.utilities.web.TrackingIdInterceptor;
@@ -19,4 +20,9 @@ public class AmqpWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
 		registry.addInterceptor(trackingIdInterceptor);
 		super.addInterceptors(registry);
 	}
+	
+    @Override
+    public void configurePathMatch(PathMatchConfigurer matcher) {
+        matcher.setUseRegisteredSuffixPatternMatch(true);
+    }
 }
