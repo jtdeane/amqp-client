@@ -1,0 +1,68 @@
+AMQP Fundaments
+
+mvn test -Dtest=ProducerFunctionalTest
+
+http://localhost:15672/#/exchanges/%2F/test.direct
+
+http://localhost:15672/#/queues/%2F/magic.greetings
+
+mvn test -Dtest=ConsumerFunctionalTest
+
+http://tryrabbitmq.com/
+
+
+http://localhost:15672/#/users
+
+
+http://localhost:15672/#/vhosts
+
+
+http://localhost:15672/#/vhosts/cogito
+
+
+mvn clean install
+mvn spring-boot:run -Drun.arguments="-Xmx256m,-Xms128m"
+
+http://localhost:15672/#/exchanges/cogito/magic.direct
+http://localhost:15672/#/exchanges/cogito/magic.topic
+
+http://localhost:15672/#/queues
+
+Exchange: magic.direct, Queue & Routing Key: magic.tests
+
+Exchange: magic.topic 
+Topic: magic.testing.events
+Routing Key: magic.testing.#
+
+#SENDER
+
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1125, "customer":"Houdini", "item":"Cards", "amount":6}' http://localhost:9999/amqp/magic.direct/magic.tests
+
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1126, "customer":"Teller", "item":"Dice", "amount":4}' http://localhost:9999/amqp/magic.topic/magic.testing.foo
+
+#LISTENER
+
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1127, "customer":"Blain", "item":"Marbles", "amount":2}' http://localhost:9999/amqp/magic.direct/magic.sales.orders
+
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1128, "customer":"Blackstone", "item":"Scarf", "amount":4}' http://localhost:9999/amqp/magic.direct/magic.sales.orders
+
+#SUBSCRIBER
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":21, "location":"Las Vegas", "title":"Penn and Teller", "date":"2016-12-31"}' http://localhost:9999/amqp/magic.topic/magic.events.shows
+
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":22, "location":"Clearwater", "title":"ArchConf", "date":"2016-12-12"}' http://localhost:9999/amqp/magic.topic/magic.events.conferences
+
+
+#API
+http://localhost:15672/api/vhosts
+
+#CLI
+rabbitmqadmin list vhosts
+
+#COMPLEX
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":21, "location":"Las Vegas", "title":"Penn and Teller", "date":"2016-12-31"}' http://localhost:9999/amqp/magic.topic/magic.events.shows
+
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":22, "location":"Clearwater", "title":"ArchConf", "date":"2016-12-12"}' http://localhost:9999/amqp/magic.topic/magic.events.conferences
+
+#ASYNC REQUEST-REPLY
+
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1129, "customer":"Penn", "item":"Rabbit", "amount":6}' http://localhost:9000/priority/orders
