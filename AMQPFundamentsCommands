@@ -66,3 +66,5 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POS
 #ASYNC REQUEST-REPLY
 
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1129, "customer":"Penn", "item":"Rabbit", "amount":6}' http://localhost:9000/priority/orders
+
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1130, "customer":"Angel", "item":"quarters", "amount":6}' http://localhost:9000/priority/vip/orders
