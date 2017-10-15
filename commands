@@ -1,4 +1,14 @@
-AMQP Fundaments
+AMQP Fundamentals
+
+#Docker Setup
+docker network create amqp-network
+
+#Docker RabbitMQ
+docker run -d -p 15672:15672 --net=amqp-network --name amqp-broker --hostname amqp-broker rabbitmq:3.6.12-management
+
+#Docker Portainer (not windows -v /var/run/docker.sock:/var/run/docker.sock)
+docker volume create portainer_data
+docker run -d -p 9898:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
 
 mvn test -Dtest=ProducerFunctionalTest
 
@@ -8,17 +18,11 @@ http://localhost:15672/#/queues/%2F/magic.greetings
 
 mvn test -Dtest=ConsumerFunctionalTest
 
-http://tryrabbitmq.com/
-
-
 http://localhost:15672/#/users
-
 
 http://localhost:15672/#/vhosts
 
-
 http://localhost:15672/#/vhosts/cogito
-
 
 mvn clean install
 mvn spring-boot:run -Drun.arguments="-Xmx256m,-Xms128m"
@@ -28,17 +32,26 @@ http://localhost:15672/#/exchanges/cogito/magic.topic
 
 http://localhost:15672/#/queues
 
-Exchange: magic.direct, Queue & Routing Key: magic.tests
+Exchange: magic.direct
+Queue & Routing Key: magic.tests
 
 Exchange: magic.topic 
 Topic: magic.testing.events
 Routing Key: magic.testing.#
+
+#Docker AMQP Client
+docker pull jtdeane/amqp-client 
+docker run -d -p 9999:9999 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-client amp-client:latest
 
 #SENDER
 
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1125, "customer":"Houdini", "item":"Cards", "amount":6}' http://localhost:9999/amqp/magic.direct/magic.tests
 
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1126, "customer":"Teller", "item":"Dice", "amount":4}' http://localhost:9999/amqp/magic.topic/magic.testing.foo
+
+#Docker AMQP Consumer
+docker pull jtdeane/amqp-consumer
+docker run -d -p 9000:9000 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-consumer amp-consumer:latest
 
 #LISTENER
 
@@ -51,17 +64,24 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POS
 
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":22, "location":"Clearwater", "title":"ArchConf", "date":"2016-12-12"}' http://localhost:9999/amqp/magic.topic/magic.events.conferences
 
-
 #API
 http://localhost:15672/api/vhosts
 
 #CLI
 rabbitmqadmin list vhosts
 
-#COMPLEX
+#Docker AMQP CEP
+docker pull jtdeane/amqp-consumer
+docker run -d -p 9002:9002 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-cep amqp-cep:latest
+
+#COMPLEX EVENT PROCESSING
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":21, "location":"Las Vegas", "title":"Penn and Teller", "date":"2016-12-31"}' http://localhost:9999/amqp/magic.topic/magic.events.shows
 
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":22, "location":"Clearwater", "title":"ArchConf", "date":"2016-12-12"}' http://localhost:9999/amqp/magic.topic/magic.events.conferences
+
+#Docker AMQP Producer
+docker pull jtdeane/amqp-producer
+docker run -d -p 9001:9001 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-producer amqp-producer:latest
 
 #ASYNC REQUEST-REPLY
 
