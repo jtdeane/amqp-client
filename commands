@@ -41,7 +41,7 @@ Routing Key: magic.testing.#
 
 #Docker AMQP Client
 docker pull jtdeane/amqp-client 
-docker run -d -p 9999:9999 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-client amp-client:latest
+docker run -d -p 9999:9999 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-client amqp-client:latest
 
 #SENDER
 
