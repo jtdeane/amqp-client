@@ -51,7 +51,7 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POS
 
 #Docker AMQP Consumer
 docker pull jtdeane/amqp-consumer
-docker run -d -p 9000:9000 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-consumer amp-consumer:latest
+docker run -d -p 9000:9000 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-consumer amqp-consumer:latest
 
 #LISTENER
 
