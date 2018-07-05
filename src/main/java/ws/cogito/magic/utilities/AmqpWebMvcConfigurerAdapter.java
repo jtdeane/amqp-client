@@ -2,14 +2,15 @@ package ws.cogito.magic.utilities;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import ws.cogito.magic.utilities.web.TrackingIdInterceptor;
 
 @Configuration
-public class AmqpWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
+public class AmqpWebMvcConfigurerAdapter implements WebMvcConfigurer {
 	
 	@Autowired
 	TrackingIdInterceptor trackingIdInterceptor;
@@ -18,11 +19,11 @@ public class AmqpWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
 	public void addInterceptors(InterceptorRegistry registry) {
 		
 		registry.addInterceptor(trackingIdInterceptor);
-		super.addInterceptors(registry);
 	}
 	
     @Override
-    public void configurePathMatch(PathMatchConfigurer matcher) {
-        matcher.setUseRegisteredSuffixPatternMatch(true);
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer.favorPathExtension(false);
+        configurer.defaultContentType(MediaType.APPLICATION_JSON);
     }
 }

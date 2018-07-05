@@ -15,7 +15,11 @@ Build and launch the project:
 
 * `mvn clean install`
 
-* `java -jar ./target/amqp-client-1.0.1.jar`
+* `java -jar ./target/amqp-client-1.0.2.jar`
+
+Check health
+
+`http://localhost:9999/actuator/info`
 
 ##Usage
 

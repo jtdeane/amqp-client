@@ -11,6 +11,9 @@ docker volume create portainer_data
 
 docker run -d -p 9898:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
 
+#docker container logs
+docker logs –f {container id}
+
 #functional tests
 mvn test -Dtest=ProducerFunctionalTest
 
@@ -34,7 +37,7 @@ OR
 
 #Start Docker AMQP Client
 docker pull jtdeane/amqp-client 
-docker run -d -p 9999:9999 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-client amqp-client:latest
+docker run -d -p 9999:9999 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-client --name amqp-client amqp-client:latest
 
 http://localhost:15672/#/exchanges/cogito/magic.direct
 http://localhost:15672/#/exchanges/cogito/magic.topic
@@ -62,7 +65,7 @@ OR
 
 #Start Docker AMQP Consumer
 docker pull jtdeane/amqp-consumer
-docker run -d -p 9000:9000 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-consumer amqp-consumer:latest
+docker run -d -p 9000:9000 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-consumer --name amqp-consumer amqp-consumer:latest
 
 #LISTENER
 
@@ -71,9 +74,9 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POS
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"order":1128, "customer":"Blackstone", "item":"Scarf", "amount":4}' http://localhost:9999/amqp/magic.direct/magic.sales.orders
 
 #SUBSCRIBER
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":21, "location":"Las Vegas", "title":"Penn and Teller", "date":"2016-12-31"}' http://localhost:9999/amqp/magic.topic/magic.events.shows
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":21, "location":"Las Vegas", "title":"Penn and Teller", "date":"2018-12-31"}' http://localhost:9999/amqp/magic.topic/magic.events.shows
 
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":22, "location":"Clearwater", "title":"ArchConf", "date":"2016-12-12"}' http://localhost:9999/amqp/magic.topic/magic.events.conferences
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":22, "location":"Clearwater", "title":"ArchConf", "date":"2018-12-10"}' http://localhost:9999/amqp/magic.topic/magic.events.conferences
 
 #API
 http://localhost:15672/api/vhosts
@@ -89,12 +92,12 @@ OR
 
 #Start Docker AMQP CEP
 docker pull jtdeane/amqp-consumer
-docker run -d -p 9002:9002 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-cep amqp-cep:latest
+docker run -d -p 9002:9002 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-cep --name amqp-cep amqp-cep:latest
 
 #COMPLEX EVENT PROCESSING
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":21, "location":"Las Vegas", "title":"Penn and Teller", "date":"2016-12-31"}' http://localhost:9999/amqp/magic.topic/magic.events.shows
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":21, "location":"Las Vegas", "title":"Penn and Teller", "date":"2018-12-31"}' http://localhost:9999/amqp/magic.topic/magic.events.shows
 
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":22, "location":"Clearwater", "title":"ArchConf", "date":"2016-12-12"}' http://localhost:9999/amqp/magic.topic/magic.events.conferences
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"event":22, "location":"Clearwater", "title":"ArchConf", "date":"2018-12-10"}' http://localhost:9999/amqp/magic.topic/magic.events.conferences
 
 #Build and Boot local AMQP CEP
 mvn clean install
@@ -104,7 +107,7 @@ OR
 
 #Start Docker AMQP Producer
 docker pull jtdeane/amqp-producer
-docker run -d -p 9001:9001 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-producer amqp-producer:latest
+docker run -d -p 9001:9001 -e JAVA_OPTS='-Xmx256m -Xms128m' --net=amqp-network --hostname amqp-producer --name amqp-producer amqp-producer:latest
 
 #ASYNC REQUEST-REPLY
 
